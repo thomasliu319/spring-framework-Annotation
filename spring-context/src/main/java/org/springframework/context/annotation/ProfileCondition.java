@@ -33,15 +33,21 @@ class ProfileCondition implements Condition {
 
 	@Override
 	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+		//获得@Profile的注解属性
 		MultiValueMap<String, Object> attrs = metadata.getAllAnnotationAttributes(Profile.class.getName());
+			//如果非空进行判断
 		if (attrs != null) {
+			//	遍历所有@Profile的value属性
 			for (Object value : attrs.get("value")) {
+				//判断environment中有符合条件的profile,有则返回ture，标识匹配
 				if (context.getEnvironment().acceptsProfiles(Profiles.of((String[]) value))) {
 					return true;
 				}
 			}
+			//如果没有，返回false
 			return false;
 		}
+		//如果为空，则表示满足条件
 		return true;
 	}
 
